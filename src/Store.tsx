@@ -22,6 +22,10 @@ export class Store {
         startGame(this.board).then(brd => this.board = brd)
     }
 
+    login(userName: string, pwd: string) {
+
+    }
+
 
     setBoardSize(size: {x: number, y: number}) {
         this.boardSize = size
@@ -41,6 +45,8 @@ export const withStore = <P extends object>(Cmp: React.FunctionComponent<P>) => 
     return (props: P) => <Cmp {...props} store={gameStore} />
 }
 
+
+
 export const useStore: (refreshFor?: StoreEvent[]) => [Store, (e: {name: StoreEvent, payload?: any}) => Promise<void>] = refreshFor => {
     const refresh = useRefresh()
     
@@ -48,6 +54,9 @@ export const useStore: (refreshFor?: StoreEvent[]) => [Store, (e: {name: StoreEv
         switch (e.name) {
             case 'next-gen':
                 await gameStore.nextGen()
+                break
+            case 'login':
+                await gameStore.login(e.payload!.userName, e.payload!.pwd)
                 break
             default:
                 break

@@ -44,7 +44,7 @@ const App = () => {
 
         <div style={{display: 'flex', flexDirection: 'row'}}>
             <button onClick={() => {
-                send({name: 'next-gen'})
+                send({name: 'next-gen', payload: {userName: 'bob', pwd: '###'}})
             }} > 
                 next episode 
             </button>
