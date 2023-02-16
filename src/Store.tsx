@@ -18,14 +18,10 @@ export class Store {
         dead_cells: []
     }
 
-    constructor() {
-        startGame(this.board).then(brd => this.board = brd)
+    async start() {
+        const initialBoard: Board = await startGame(this.board)
+        this.board = initialBoard
     }
-
-    login(userName: string, pwd: string) {
-
-    }
-
 
     setBoardSize(size: {x: number, y: number}) {
         this.boardSize = size
@@ -41,30 +37,26 @@ export class Store {
 
 const gameStore = new Store()
 
-export const withStore = <P extends object>(Cmp: React.FunctionComponent<P>) => {
-    return (props: P) => <Cmp {...props} store={gameStore} />
-}
 
-
-
-export const useStore: (refreshFor?: StoreEvent[]) => [Store, (e: {name: StoreEvent, payload?: any}) => Promise<void>] = refreshFor => {
+export const useStore: (refreshFor?: StoreEvent[]) => [Store, (name: StoreEvent) => Promise<void>] = refreshFor => {
     const refresh = useRefresh()
     
-    const send = async(e: {name: StoreEvent, payload?: any}) => {
-        switch (e.name) {
+    const send = async(name: StoreEvent) => {
+        switch (name) {
             case 'next-gen':
                 await gameStore.nextGen()
                 break
-            case 'login':
-                await gameStore.login(e.payload!.userName, e.payload!.pwd)
+            case 'start':
+                await gameStore.start()
                 break
             default:
                 break
         }
 
-        if (!refreshFor || refreshFor.includes(e.name)) refresh()
+        if (!refreshFor || refreshFor.includes(name)) {
+            refresh()
+        }
     }
-
     return [gameStore, send]
 }
 
