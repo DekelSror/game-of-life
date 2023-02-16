@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
-import gameStore, { Store } from './Store'
+import gameStore, { Store, useStore } from './Store'
 
-const World = (props: {store: Store}) => {
-    const {store} = props
+const World = () => {
+    const [store, send] = useStore(['next-gen'])
+    // update world for next gen to render new board
     
     const a = (() => {
         let arr = []
@@ -27,26 +28,23 @@ const World = (props: {store: Store}) => {
     </div>
 }
 
-const App = () => {
+export const useRefresh = () => {
     const [refresh, setRefresh] = useState(false)
+    
+    return () => setRefresh(!refresh)
+}
 
-    const f5 = () => setRefresh(!refresh)
-    const gotoGen = useRef(0)
-
-    // useEffect(() => {
-    //     startGame(gameStore.board)
-
-        
-    // })
+const App = () => {
+    const [store, send] = useStore(['next-gen'])
+    // update app for gen counter
 
     return <div>
-        <World store={gameStore} />
-        <h4> {gameStore.currentGen} </h4>
+        <World />
+        <h4> {store.currentGen} </h4>
 
         <div style={{display: 'flex', flexDirection: 'row'}}>
             <button onClick={() => {
-                gameStore.nextGen()
-                f5()
+                send({name: 'next-gen'})
             }} > 
                 next episode 
             </button>
