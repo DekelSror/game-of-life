@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
+import { Coordinate } from './models';
 import gameStore, { Store, useStore } from './Store'
 
 const World = () => {
@@ -20,14 +21,13 @@ const World = () => {
     return <div style={{width: 100, display: 'flex', flexGrow: 10, flexWrap: 'wrap'}} >
     {a.map((cell, i) => {
         const coords = {x: i % store.boardSize.x, y: Math.floor(i / store.boardSize.x)}
-        console.log("this is i ->", i, "cooorrrrds -> ", coords)
-        
+        const listCoords = store.createCoords(coords, gameStore.board.living_cells)
+
         return <div key={cell} style={{textAlign: 'center', fontSize: 20, flexGrow: 1, height: 30, width: 30, border: '1px solid grey'}} >
-            {gameStore.board.living_cells.map(c => {
-                return c.coordinate // delete include and create function that comparse thex and the y to cooooooords
-                }).includes(coords) ? 'x' : 'o'}
+            {listCoords }
         </div>
     })}
+    
     
     </div>
 }

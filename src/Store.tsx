@@ -3,7 +3,7 @@ import {nextGeneration, startGame} from './api'
 import { useRefresh } from './App'
 import { Board, Cell, Coordinate } from './models'
 
-const blinker_1: Coordinate[] = [{x:1, y: 0}, {x:1, y: 1}, {x:1, y: 2}]
+const blinker_1: Coordinate[] = [{x:1, y: 0}, {x:2, y: 1}, {x:0, y: 2}]
 
 type StoreEvent = string
 
@@ -30,6 +30,23 @@ export class Store {
 
     nextGen = async() => {
         this.board = await nextGeneration()
+    }
+
+    createCoords(first: Coordinate, second: Cell[]){
+
+        const list = second.map((c) => {
+            
+                if(this.compareCoords(c.coordinate, first))
+                    return 'X'
+        }
+            )
+        
+
+        
+        return list
+    }
+    compareCoords(first: Coordinate, second: Coordinate){
+        return first.x == second.x && first.y == second.y;
     }
 }
 
