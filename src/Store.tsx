@@ -4,6 +4,7 @@ import { useRefresh } from './App'
 import { Board, Cell, Coordinate } from './models'
 
 const blinker_1: Coordinate[] = [{x:1, y: 0}, {x:1, y: 1}, {x:1, y: 2}]
+const dead: Coordinate[] = [{x:0, y:0}, {x:0, y:1}, {x:0, y:2}, {x:2, y:0}, {x:2, y:1}, {x:2, y:2}]
 
 type StoreEvent = string
 
@@ -15,7 +16,7 @@ export class Store {
 
     board: Board = {
         living_cells: blinker_1.map(coordinate => new Cell(coordinate)),
-        dead_cells: []
+        dead_cells: dead.map(coord => new Cell(coord))
     }
 
     async start() {
@@ -69,10 +70,11 @@ export const useStore: (refreshFor?: StoreEvent[]) => [Store, (name: StoreEvent)
             default:
                 break
         }
-
-        if (!refreshFor || refreshFor.includes(name)) {
-            refresh()
-        }
+        refresh()
+        // if (!refreshFor || refreshFor.includes(name)) {
+        //     console.log("refresh prince")
+            
+        // }
     }
     return [gameStore, send]
 }
